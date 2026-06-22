@@ -134,7 +134,7 @@ walker() {
         gtk4 gtk4-layer-shell cairo poppler-glib protobuf
 
     install_if_missing_paru walker
-    install_if_missing elephant
+    install_if_missing_paru elephant
 }
 
 walker_post() {
