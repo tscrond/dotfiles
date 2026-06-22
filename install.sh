@@ -4,12 +4,13 @@ trap 'echo "FAILED at line $LINENO"' ERR
 
 ### HELPERS ###
 check_if_installed() {
-    PROGRAM=$1
-    if command -v "$PROGRAM" >/dev/null 2>&1; then
-        log success "$PROGRAM installed - proceeding"
+    local program="$1"
+
+    if command -v "$program" >/dev/null 2>&1; then
+        log success "$program installed - proceeding"
         return 0
     else
-        log error "$PROGRAM not installed"
+        log error "$program not installed"
         return 1
     fi
 }
@@ -46,7 +47,7 @@ prerequisites() {
         log error "pacman not working - aborting"
         exit 1
     fi
-    
+
     sudo pacman -Syyu
     
     check_if_installed git
