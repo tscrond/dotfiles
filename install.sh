@@ -65,6 +65,7 @@ initial() {
         kitty \
         sddm \
         hyprlock \
+        yazi \
         brightnessctl \
         hyprpolkitagent \
         xdg-desktop-portal-hyprland \
@@ -129,6 +130,7 @@ walker_post() {
 
 ### MAIN FLOW ###
 prerequisites
+initial
 aur_helper
 brave
 walker
