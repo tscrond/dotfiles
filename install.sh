@@ -41,6 +41,9 @@ paru_needed() {
 prerequisites() {
     check_if_installed pacman
     [[ $? != 0 ]] && log error  "cannot proceed further - make sure pacman is installed" && exit 1
+    
+    sudo pacman -Syyu
+    
     check_if_installed git
     [[ $? != 0 ]] && sudo pacman -Syu git
 }
@@ -58,6 +61,8 @@ enable_xdgdesktopportal() {
 initial() {
     # install tooling like openssh, ohmyzsh, vim etc.
     sudo pacman -Syu fzf \
+        hyprland \
+        kitty \
         sddm \
         hyprlock \
         brightnessctl \
@@ -91,7 +96,7 @@ brave() {
 }
 
 aur_helper() {
-    sudo pacman -S --needed base-devel
+    sudo pacman -Syu --needed base-devel
     git clone https://aur.archlinux.org/paru.git
     cd paru
     makepkg -si
@@ -106,7 +111,7 @@ walker() {
     # - poppler-glib development files
     # - Rust toolchain (via rustup)
 
-    sudo pacman -S gtk4 gtk4-layer-shell cairo poppler-glib protobuf
+    sudo pacman -Syu gtk4 gtk4-layer-shell cairo poppler-glib protobuf
 
     paru_needed
     
@@ -117,7 +122,7 @@ walker() {
 walker_post() {
     check_if_installed elephant
     [[ $? != 0 ]] && log error "cannot proceed further - make sure elephant is installed"
-    
+
     elephant service enable
     systemctl --user start elephant.service
 }
