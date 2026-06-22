@@ -42,8 +42,10 @@ paru_needed() {
 }
 
 prerequisites() {
-    check_if_installed pacman
-    [[ $? != 0 ]] && log error  "cannot proceed further - make sure pacman is installed" && exit 1
+    if ! pacman --version >/dev/null 2>&1; then
+        log error "pacman not working - aborting"
+        exit 1
+    fi
     
     sudo pacman -Syyu
     
