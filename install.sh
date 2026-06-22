@@ -82,7 +82,7 @@ initial() {
         fzf hyprland kitty sddm hyprlock yazi brightnessctl \
         hyprpolkitagent xdg-desktop-portal-hyprland waybar \
         unzip zip p7zip wget curl git htop fastfetch \
-        wl-clipboard stow
+        wl-clipboard stow hyprpaper
 
     enable_service hyprpolkitagent.service
     enable_service xdg-desktop-portal-hyprland.service
