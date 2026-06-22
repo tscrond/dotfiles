@@ -26,6 +26,17 @@ require_or_install() {
     fi
 }
 
+install_if_missing_paru() {
+    local pkg="$1"
+
+    if paru -Q "$pkg" >/dev/null 2>&1; then
+        log success "$pkg already installed"
+        return
+    fi
+
+    paru -S --noconfirm --needed --skipreview "$pkg"
+}
+
 clone_if_missing() {
     local repo="$1"
     local dest="$2"
@@ -114,7 +125,7 @@ brave() {
         return
     fi
 
-    paru -S --noconfirm brave
+    install_if_missing_paru brave
 }
 
 ### WALKER ###
@@ -122,7 +133,8 @@ walker() {
     sudo pacman -S --noconfirm --needed \
         gtk4 gtk4-layer-shell cairo poppler-glib protobuf
 
-    paru -S --noconfirm walker elephant
+    install_if_missing_paru walker
+    install_if_missing elephant
 }
 
 walker_post() {
@@ -132,7 +144,7 @@ walker_post() {
     fi
 
     elephant service enable || true
-    systemctl --user start elephant.service || true
+    systemctl --user start elephant || true
 }
 
 ### MAIN ###
