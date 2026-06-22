@@ -10,8 +10,19 @@ check_if_installed() {
         log success "$program installed - proceeding"
         return 0
     else
-        log error "$program not installed"
+        log error "$program not installed - aborting"
         return 1
+    fi
+}
+
+require_or_install() {
+    local pkg="$1"
+
+    if command -v "$pkg" >/dev/null 2>&1; then
+        log success "$pkg already installed"
+    else
+        log error "$pkg missing - installing"
+        sudo pacman -S --noconfirm "$pkg"
     fi
 }
 
@@ -50,8 +61,7 @@ prerequisites() {
 
     sudo pacman -Syyu
     
-    check_if_installed git
-    [[ $? != 0 ]] && sudo pacman -Syu git
+    require_or_install git
 }
 
 ### INSTALLATION HELPERS ###
@@ -128,8 +138,7 @@ walker() {
 
 walker_post() {
     check_if_installed elephant
-    [[ $? != 0 ]] && log error "cannot proceed further - make sure elephant is installed"
-
+    
     elephant service enable
     systemctl --user start elephant.service
 }
