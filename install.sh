@@ -151,7 +151,7 @@ config_setup() {
     mv ~/.zshrc ~/.zshrc.bak || true
     mv ~/.config/hypr/hyprland.lua ~/hyprland.lua.bak || true
 
-    stow -R -t ~ hypr hyprpaper kitty zsh
+    stow -R -t ~ hypr kitty zsh
 }
 
 ### MAIN ###
