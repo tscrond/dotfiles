@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
+trap 'echo "FAILED at line $LINENO"' ERR
 
 ### HELPERS ###
 check_if_installed() {
     PROGRAM=$1
-    if command -v $PROGRAM; then
+    if command -v "$PROGRAM" >/dev/null 2>&1; then
         log success "$PROGRAM installed - proceeding"
         return 0
     else
@@ -34,8 +35,10 @@ log() {
 }
 
 paru_needed() {
-    check_if_installed paru
-    [[ $? != 0 ]] && log error "cannot proceed further - make sure paru is installed" && exit 1
+    if ! check_if_installed paru; then
+        log error "cannot proceed further - make sure paru is installed"
+        exit 1
+    fi
 }
 
 prerequisites() {
@@ -60,7 +63,7 @@ enable_xdgdesktopportal() {
 ### INSTALLATION FUNCTIONS ###
 initial() {
     # install tooling like openssh, ohmyzsh, vim etc.
-    sudo pacman -Syu fzf \
+    sudo pacman -Syu --noconfirm fzf \
         hyprland \
         kitty \
         sddm \
@@ -97,7 +100,7 @@ brave() {
 }
 
 aur_helper() {
-    sudo pacman -Syu --needed base-devel
+    sudo pacman -Syu --noconfirm --needed base-devel
     git clone https://aur.archlinux.org/paru.git
     cd paru
     makepkg -si
@@ -112,7 +115,7 @@ walker() {
     # - poppler-glib development files
     # - Rust toolchain (via rustup)
 
-    sudo pacman -Syu gtk4 gtk4-layer-shell cairo poppler-glib protobuf
+    sudo pacman -Syu --noconfirm gtk4 gtk4-layer-shell cairo poppler-glib protobuf
 
     paru_needed
     
