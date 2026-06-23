@@ -92,9 +92,6 @@ initial() {
     enable_service blueman-applet
     enable_service blueman-manager
 
-    sudo systemctl enable sddm
-    sudo systemctl start sddm
-
     install_ohmyzsh
 
     clone_if_missing \
@@ -199,6 +196,9 @@ config_setup() {
     mv ~/.config/hypr/hyprland.lua ~/hyprland.lua.bak || true
 
     stow -R -t ~ hypr kitty zsh waybar gtk fastfetch
+    
+    sudo systemctl enable sddm
+    sudo systemctl start sddm
 }
 
 ### MAIN ###
