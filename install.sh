@@ -160,16 +160,20 @@ gtk_theme() {
     install_if_missing_paru "gtk-engine-murrine"
     install_if_missing_paru "sassc"
 
-    git clone https://github.com/vinceliuice/Colloid-icon-theme.git
-    cd Colloid-icon-theme
-    PWD=$(pwd)
-    bash -x -c "${PWD}/install.sh -s nord"
+    clone_if_missing \
+        https://github.com/vinceliuice/Colloid-icon-theme.git \
+        ${HOME}/Colloid-icon-theme
+
+    clone_if_missing \
+        https://github.com/vinceliuice/Colloid-gtk-theme.git \
+        ${HOME}/Colloid-gtk-theme
+
+    cd ${HOME}/Colloid-icon-theme
+    bash -x -c "${HOME}/Colloid-icon-theme/install.sh -s nord"
     cd -
 
-    git clone https://github.com/vinceliuice/Colloid-gtk-theme.git
-    cd Colloid-gtk-theme
-    PWD=$(pwd)
-    bash -x -c "${PWD}/install.sh"
+    cd ${HOME}/Colloid-gtk-theme
+    bash -x -c "${HOME}/Colloid-gtk-theme/install.sh"
     cd -
 
     gsettings set org.gnome.desktop.interface color-scheme prefer-dark
