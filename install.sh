@@ -82,10 +82,18 @@ initial() {
         fzf hyprland kitty sddm hyprlock yazi brightnessctl \
         hyprpolkitagent xdg-desktop-portal-hyprland waybar \
         unzip zip p7zip wget curl git htop fastfetch \
-        wl-clipboard stow hyprpaper
+        wl-clipboard stow hyprpaper blueman swaync
 
     enable_service hyprpolkitagent.service
     enable_service xdg-desktop-portal-hyprland.service
+    enable_service hyprpaper.service
+    enable_service waybar.service
+    enable_service swaync.service
+    enable_service blueman-applet
+    enable_service blueman-manager
+
+    sudo systemctl enable sddm
+    sudo systemctl start sddm
 
     install_ohmyzsh
 
@@ -147,11 +155,46 @@ walker_post() {
     systemctl --user start elephant || true
 }
 
+gtk_theme() {
+    install_if_missing_paru "gnome-themes-extra"
+    install_if_missing_paru "gtk-engine-murrine"
+    install_if_missing_paru "sassc"
+
+    git clone https://github.com/vinceliuice/Colloid-icon-theme.git
+    cd Colloid-icon-theme
+    PWD=$(pwd)
+    bash -x -c "${PWD}/install.sh -s nord"
+    cd -
+
+    git clone https://github.com/vinceliuice/Colloid-gtk-theme.git
+    cd Colloid-gtk-theme
+    PWD=$(pwd)
+    bash -x -c "${PWD}/install.sh"
+    cd -
+
+    gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+    gsettings set org.gnome.desktop.interface gtk-theme 'Colloid-Dark'
+
+    sudo pacman -S --noconfirm --needed nautilus galculator loupe file-roller gnome-system-monitor amberol
+}
+
+sddm_theme() {
+    sudo pacman -S --noconfirm --needed qt6-declarative qt6-5compat qt6-svg \
+        qt6-multimedia qt6-multimedia-ffmpeg \
+        gst-plugins-base gst-plugins-good \
+        gst-plugins-bad gst-plugins-ugly
+    
+    git clone https://github.com/Darkkal44/qylock.git
+    cd qylock
+    chmod +x sddm.sh && ./sddm.sh
+    cd -
+}
+
 config_setup() {
     mv ~/.zshrc ~/.zshrc.bak || true
     mv ~/.config/hypr/hyprland.lua ~/hyprland.lua.bak || true
 
-    stow -R -t ~ hypr kitty zsh
+    stow -R -t ~ hypr kitty zsh waybar gtk fastfetch
 }
 
 ### MAIN ###
@@ -161,3 +204,6 @@ aur_helper
 brave
 walker
 walker_post
+gtk_theme
+sddm_theme
+config_setup
