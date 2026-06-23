@@ -133,25 +133,7 @@ brave() {
     install_if_missing_paru brave
 }
 
-### WALKER ###
-walker() {
-    sudo pacman -S --noconfirm --needed \
-        gtk4 gtk4-layer-shell cairo poppler-glib protobuf
-
-    install_if_missing_paru walker
-    install_if_missing_paru elephant
-}
-
-walker_post() {
-    if ! is_installed elephant; then
-        log error "elephant missing"
-        return 1
-    fi
-
-    elephant service enable || true
-    systemctl --user start elephant || true
-}
-
+### GTK ###
 gtk_theme() {
     install_if_missing_paru "gnome-themes-extra"
     install_if_missing_paru "gtk-engine-murrine"
@@ -179,6 +161,7 @@ gtk_theme() {
     sudo pacman -S --noconfirm --needed nautilus galculator loupe file-roller gnome-system-monitor amberol
 }
 
+### SDDM ###
 sddm_theme() {
     sudo pacman -S --noconfirm --needed qt6-declarative qt6-5compat qt6-svg \
         qt6-multimedia qt6-multimedia-ffmpeg \
@@ -189,6 +172,14 @@ sddm_theme() {
     cd qylock
     chmod +x sddm.sh && ./sddm.sh
     cd -
+}
+
+### VICINAE ###
+vicinae() {
+    install_if_missing_paru "vicinae" "vicinae"
+    enable_service "vicinae"
+    systemctl --user start vicinae
+    systemctl --user status vicinae
 }
 
 config_setup() {
@@ -206,8 +197,6 @@ prerequisites
 initial
 aur_helper
 brave
-walker
-walker_post
 gtk_theme
 sddm_theme
 config_setup
